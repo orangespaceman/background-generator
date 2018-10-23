@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>
+      Background generator
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      body {
+        background: #c9c9c9;
+      }
+      label,
+      p {
+        display: block;
+        clear: both;
+        margin-bottom: 10px;
+      }
+      .input-label,
+      .label-inline {
+        font-size: 24px;
+        display: inline-block;
+        width: 160px;
+      }
+      input {
+        font-size: 24px;
+      }
+
+      img {
+        border: 5px solid #fff;
+        background: #000;
+        max-width: 25%;
+        margin: 20px;
+      }
+    </style>
+    <script src="./generate.js"></script>
+    <meta name="theme-color" content="#000000">
+  </head>
+
+  <body>
+    <h1>Background generator</h1>
+    <form>
+      <label>
+        <span class="input-label">Image count:</span>
+        <input type="number" name="images" value="4">
+      </label>
+      <label>
+        <span class="input-label">Width:</span>
+        <input type="number" name="width" value="500">
+      </label>
+      <label>
+        <span class="input-label">Height:</span>
+        <input type="number" name="height" value="500">
+      </label>
+      <label>
+        <span class="input-label">Object count:</span>
+        <input type="number" name="objects" value="50">
+      </label>
+      <div class="label">
+        <span class="input-label">Type:</span>
+        <label class="label-inline">
+          <span class="input-label-inline">Stars</span>
+          <input type="radio" name="type" value="stars" checked />
+        </label>
+        <label class="label-inline">
+          <span class="input-label-inline">Lines</span>
+          <input type="radio" name="type" value="lines" />
+        </label>
+      </p>
+
+      <p><span class="input-label">Output (click to download):</span></p>
+      <div class="output"></div>
+    </form>
+
+    <script>
+      var imagesEl = document.querySelector('input[name=images]');
+      var widthEl = document.querySelector('input[name=width]');
+      var heightEl = document.querySelector('input[name=height]');
+      var objectsEl = document.querySelector('input[name=objects]');
+      var typeStarsEl = document.querySelector('input[name=type][value=stars]');
+      var typeLinesEl = document.querySelector('input[name=type][value=lines]');
+      var outputEl = document.querySelector('.output');
+
+      imagesEl.addEventListener('change', onChange);
+      widthEl.addEventListener('change', onChange);
+      heightEl.addEventListener('change', onChange);
+      objectsEl.addEventListener('change', onChange);
+      typeLinesEl.addEventListener('click', onChange);
+      typeStarsEl.addEventListener('click', onChange);
+
+      function onChange() {
+        var images = parseInt(imagesEl.value, 10);
+        var width = parseInt(widthEl.value, 10);
+        var height = parseInt(heightEl.value, 10);
+        var objects = parseInt(objectsEl.value, 10);
+        var type = document.querySelector('input[name=type]:checked').value;
+
+        while (outputEl.firstChild) {
+          outputEl.removeChild(outputEl.firstChild);
+        }
+
+        for (var i = 0; i < images; i++) {
+          var src = generate(width, height, objects, type);
+          var image = new Image();
+          image.src = src;
+          var link = document.createElement('a');
+          link.href = src;
+          link.download = 'bg-' + i + '.png';
+          outputEl.appendChild(link);
+          link.appendChild(image);
+        }
+      }
+
+      onChange();
+    </script>
+    <script src="https://orangespaceman.github.io/lab-badge/lab-badge.min.js"></script>
+  </body>
+</html>
